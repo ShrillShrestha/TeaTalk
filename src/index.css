@@ -1,0 +1,56 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+body { font-family: 'Hanken Grotesk', system-ui, sans-serif; }
+
+@keyframes flyoff {
+  to { transform: translate(var(--fx, -130%), var(--fy, -8%)) rotate(var(--fr, -16deg)); opacity: 0; }
+}
+@keyframes rise {
+  from { transform: translateY(14px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: .4; transform: scale(.85); }
+  50%       { opacity: 1;  transform: scale(1);   }
+}
+@keyframes steam {
+  0%   { opacity: 0;   transform: translateY(2px)  scaleY(.7);  }
+  40%  { opacity: .7; }
+  100% { opacity: 0;   transform: translateY(-9px) scaleY(1.1); }
+}
+
+::selection { background: #d98b6a; color: #fff; }
+input { -webkit-appearance: none; appearance: none; }
+
+.card-btn { transition: transform .15s ease, box-shadow .15s ease; }
+.card-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -14px rgba(80,55,30,.4); }
+
+.ghost-btn:hover { background: rgba(255,255,255,.5) !important; }
+.header-btn:hover { background: rgba(255,255,255,.9) !important; color: #5c4f3d !important; }
+.copy-btn:hover  { filter: brightness(1.08); }
+.dark-btn:hover  { background: #2e261d !important; }
+
+.tweaks-panel {
+  width: 100%;
+  max-width: 460px;
+  background: rgba(255,255,255,.88);
+  border: 1px solid rgba(140,120,95,.18);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+}
+.tweak-chip {
+  border: none;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 12.5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+@media (max-width: 400px) {
+  .play-question { font-size: 22px !important; }
+}
