@@ -1,0 +1,239 @@
+.screen {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+/* ── Turn indicator ─────────────────────────────────────────────── */
+
+.turnBar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.turnLeft {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.turnDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--deck-dot);
+  flex-shrink: 0;
+}
+
+.turnName {
+  font-size: 15px;
+  color: #5c4f3d;
+}
+
+.turnNameBold {
+  color: #2e261d;
+}
+
+.turnProgress {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #a8967c;
+}
+
+/* ── Card stack ─────────────────────────────────────────────────── */
+
+.cardStack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  max-height: 520px;
+  margin-bottom: 24px;
+}
+
+.stackLayerA {
+  position: absolute;
+  inset: 0;
+  background: #fbf6ec;
+  border-radius: var(--card-radius);
+  transform: rotate(3.5deg) translateY(8px);
+  box-shadow: 0 10px 30px -16px rgba(80,55,30,.35);
+  border: 1px solid rgba(140,120,95,.14);
+}
+
+.stackLayerB {
+  position: absolute;
+  inset: 0;
+  background: #fdf9f1;
+  border-radius: var(--card-radius);
+  transform: rotate(-2.2deg) translateY(4px);
+  box-shadow: 0 10px 30px -16px rgba(80,55,30,.3);
+  border: 1px solid rgba(140,120,95,.14);
+}
+
+.card {
+  position: absolute;
+  inset: 0;
+  animation: rise .35s ease both;
+}
+
+.cardFlying {
+  position: absolute;
+  inset: 0;
+  animation: flyoff .36s cubic-bezier(.4,0,.7,.3) forwards;
+}
+
+/* ── Action buttons ─────────────────────────────────────────────── */
+
+.actions {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+}
+
+.skipBtn {
+  flex-shrink: 0;
+  font-size: 15px;
+  padding: 15px 20px;
+  border-radius: 16px;
+}
+
+.advanceBtn {
+  flex: 1;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 15px;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px -12px var(--accent-shadow);
+}
+
+.flipBtn {
+  flex: 1;
+  font-size: 16px;
+  padding: 15px;
+  border-radius: 16px;
+}
+
+/* ── CardFaceDown ────────────────────────────────────────────────── */
+
+.faceDown {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  background: var(--deck-dot);
+  cursor: pointer;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.texture {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.06) 0 14px, transparent 14px 28px);
+}
+
+.faceDownGlyph {
+  font-family: 'Newsreader', serif;
+  font-size: 46px;
+  color: rgba(255,255,255,.92);
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.faceDownDeckName {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.faceDownPrompt {
+  font-family: 'Newsreader', serif;
+  font-size: 23px;
+  color: #fff;
+  line-height: 1.25;
+  position: relative;
+}
+
+.faceDownCardNum {
+  margin-top: 20px;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.65);
+  position: relative;
+}
+
+/* ── CardFaceUp ─────────────────────────────────────────────────── */
+
+.faceUp {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  background: #fffdf8;
+  border: 1px solid rgba(140,120,95,.16);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 28px;
+  box-shadow: 0 22px 50px -26px rgba(80,55,30,.5);
+}
+
+.faceUpHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.faceUpDeckLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--deck-dot);
+}
+
+.faceUpCounter {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: #cbb89c;
+}
+
+.faceUpBody {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faceUpQuestion {
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.32;
+  text-align: center;
+  color: #2e261d;
+}
+
+.faceUpFooter {
+  text-align: center;
+  font-size: 13px;
+  color: #a8967c;
+  line-height: 1.5;
+}

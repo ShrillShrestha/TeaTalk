@@ -1,0 +1,36 @@
+.screen {
+  width: 100%;
+  max-width: 460px;
+  animation: rise .5s ease both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 20px;
+}
+
+.spacer {
+  height: 14px;
+}
+
+.heading {
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.18;
+  color: #2e261d;
+  margin-bottom: 10px;
+}
+
+.headingAccent {
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.body {
+  font-size: 15px;
+  line-height: 1.55;
+  color: #7a6c58;
+  max-width: 30ch;
+  margin-bottom: 26px;
+}

@@ -1,0 +1,41 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #3a3026;
+  background: var(--page-bg);
+  padding: 24px 18px 36px;
+  transition: background .4s ease;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #a8967c;
+  font-size: 13.5px;
+  margin-top: 60px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 1.4s ease-in-out infinite;
+  display: inline-block;
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 60px;
+}
+
+.notFoundText {
+  font-size: 15px;
+  color: #7a6c58;
+}
