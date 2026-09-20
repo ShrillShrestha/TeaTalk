@@ -1,0 +1,191 @@
+.screen {
+  width: 100%;
+  max-width: 460px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: rise .5s ease both;
+}
+
+.stepLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #a8967c;
+  margin-bottom: 10px;
+}
+
+.stepLabelAlert {
+  color: var(--accent);
+}
+
+.heading {
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.25;
+  color: #2e261d;
+  margin-bottom: 28px;
+  max-width: 22ch;
+}
+
+.headingTight {
+  font-size: 29px;
+  max-width: 24ch;
+  margin-bottom: 8px;
+}
+
+.subhead {
+  font-size: 13px;
+  color: #a8967c;
+  margin-bottom: 30px;
+}
+
+/* ── emoji tiles ───────────────────────────────────────────────────────── */
+
+.tileRowSmall,
+.tileRowLarge {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  max-width: 100%;
+  margin-bottom: 22px;
+}
+
+.tileRowSmall { gap: 6px; }
+
+.tileRowLarge {
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px;
+}
+
+.tileSmall,
+.tileLarge {
+  border: 2px solid transparent;
+  background: rgba(255,255,255,.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+
+.tileSmall {
+  flex: 0 1 auto;
+  width: min(15vw, 64px);
+  height: 70px;
+  border-radius: 14px;
+  gap: 3px;
+  padding: 4px 2px;
+}
+
+.tileLarge {
+  flex: 0 0 auto;
+  width: 84px;
+  height: 78px;
+  border-radius: 16px;
+  gap: 4px;
+  padding: 6px 4px;
+}
+
+.tileSmall:hover,
+.tileLarge:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+
+.tileSelected {
+  border-color: var(--accent);
+  background: var(--accent-ring);
+}
+
+.tileEmoji {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.tileLarge .tileEmoji { font-size: 24px; }
+
+.tileLabel {
+  font-size: 8px;
+  font-weight: 600;
+  color: #8a7b66;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.tileLarge .tileLabel {
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+/* ── the running commentary ────────────────────────────────────────────── */
+
+.messageSlot {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 34ch;
+  margin-bottom: 26px;
+}
+
+.messageSlotHate {
+  margin-top: 18px;
+}
+
+.message {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--accent);
+}
+
+/* ── hate meter ────────────────────────────────────────────────────────── */
+
+.hateEmoji {
+  font-size: 56px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.hateLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 24px;
+}
+
+.sliderWrap {
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 8px;
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--accent);
+  height: 6px;
+  cursor: pointer;
+  -webkit-appearance: auto;
+  appearance: auto;
+}
+
+.sliderEnds {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: #a8967c;
+  margin-top: 6px;
+  padding: 0 2px;
+}

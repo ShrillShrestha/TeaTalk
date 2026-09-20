@@ -1,0 +1,29 @@
+.screen {
+  width: 100%;
+  max-width: 460px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  animation: rise .5s ease both;
+}
+
+.art {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 20px;
+  box-shadow: 0 22px 50px -26px rgba(80,55,30,.5);
+  margin-bottom: 26px;
+}
+
+.label {
+  font-family: 'Newsreader', serif;
+  font-weight: 500;
+  font-size: 26px;
+  color: var(--accent);
+  letter-spacing: .02em;
+  animation: pulse 1.6s ease-in-out infinite;
+}

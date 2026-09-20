@@ -1,0 +1,88 @@
+.screen {
+  width: 100%;
+  max-width: 460px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.logoWrap {
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.steam {
+  position: absolute;
+  left: 50%;
+  top: -10px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 1;
+}
+
+.steamPuff,
+.steamPuffDelayed {
+  width: 3px;
+  height: 12px;
+  border-radius: 2px;
+  background: #cbb89c;
+  animation: steam 2.4s ease-in-out infinite;
+}
+
+.steamPuffDelayed { animation-delay: .6s; }
+
+.teapot {
+  animation: spin 1.8s linear infinite;
+  transform-origin: 30px 28px;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #5c4f3d;
+  margin-bottom: 4px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #a8967c;
+  margin-bottom: 18px;
+}
+
+.factSlot {
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 32ch;
+  margin-bottom: 24px;
+  animation: rise .4s ease both;
+}
+
+.fact {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.45;
+  color: #2e261d;
+}
+
+.dots {
+  display: flex;
+  gap: 7px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: opacity .3s ease;
+}

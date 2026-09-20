@@ -7,6 +7,10 @@ import TweaksPanel from './components/TweaksPanel';
 import HostScreen from './screens/HostScreen';
 import InviteScreen from './screens/InviteScreen';
 import JoinScreen from './screens/JoinScreen';
+import VibeCheckScreen from './screens/VibeCheckScreen';
+import SurveyScreen from './screens/SurveyScreen';
+import BrewingScreen from './screens/BrewingScreen';
+import ClickStartScreen from './screens/ClickStartScreen';
 import DeckScreen from './screens/DeckScreen';
 import PlayScreen from './screens/PlayScreen';
 import DoneScreen from './screens/DoneScreen';
@@ -34,6 +38,7 @@ export default function App() {
         '--page-bg':       theme.pageBg,
         '--accent':        theme.accent,
         '--accent-dark':   theme.accentDark,
+        '--accent-ring':   theme.accentRing,
         '--accent-shadow': theme.accentShadow,
         '--card-radius':   cardRadius,
       }}
@@ -66,12 +71,36 @@ export default function App() {
       )}
 
       {screen === 'invite' && (
-        <InviteScreen hostName={room.hostName} link={room.link} copied={room.copied} onCopy={actions.copyLink} />
+        <InviteScreen
+          hostName={room.hostName} link={room.link} copied={room.copied} onCopy={actions.copyLink}
+          guestName={room.guestName} guestJoined={room.guestJoined} survey={room.survey}
+        />
       )}
 
       {screen === 'join' && (
         <JoinScreen hostName={room.hostName} guestInput={room.guestInput} setGuestInput={room.setGuestInput} onSubmit={actions.joinRoom} />
       )}
+
+      {screen === 'vibecheck' && (
+        <VibeCheckScreen hostName={room.hostName} guestName={room.guestName} onContinue={actions.continueToSurvey} />
+      )}
+
+      {screen === 'survey' && (
+        <SurveyScreen
+          step={room.surveyStep}
+          selectedVibe={room.selectedVibe} selectedExcite={room.selectedExcite}
+          hateLevel={room.hateLevel} hateTouched={room.hateTouched}
+          onPickVibe={actions.pickVibe}     onUnpickVibe={actions.unpickVibe}
+          onPickExcite={actions.pickExcite} onUnpickExcite={actions.unpickExcite}
+          onHateLevel={actions.changeHateLevel}
+          onNextQ2={actions.continueToSurveyQ2} onNextQ3={actions.continueToSurveyQ3}
+          onContinue={actions.continueToBrewing}
+        />
+      )}
+
+      {screen === 'brewing' && <BrewingScreen factIndex={room.factIndex} />}
+
+      {screen === 'clickstart' && <ClickStartScreen onStart={actions.continueToDeck} />}
 
       {screen === 'deck' && (
         <DeckScreen theme={theme} hostName={room.hostName} guestName={room.guestName} onSelect={actions.startDeck} />

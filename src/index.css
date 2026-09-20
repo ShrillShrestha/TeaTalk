@@ -13,6 +13,10 @@ body { font-family: 'Hanken Grotesk', system-ui, sans-serif; }
   0%, 100% { opacity: .4; transform: scale(.85); }
   50%       { opacity: 1;  transform: scale(1);   }
 }
+@keyframes spin {
+  0%, 88%, 100% { transform: rotate(0deg);  }
+  94%           { transform: rotate(-8deg); }
+}
 @keyframes steam {
   0%   { opacity: 0;   transform: translateY(2px)  scaleY(.7);  }
   40%  { opacity: .7; }
