@@ -17,7 +17,7 @@ export const EXCITEMENT = [
 export const HATE_LEVELS = [
   { level: 1, emoji: '🥰', label: 'Zero hate',        message: "Aww. This is borderline concerning levels of fondness." },
   { level: 2, emoji: '😐', label: 'Barely anything',  message: "A little side-eye, nothing that won't survive tonight." },
-  { level: 3, emoji: '😒', label: 'Some tension',     message: "Ah, the classic 'I love you but also you're annoying' zone." },
+  { level: 3, emoji: '😒', label: 'Some tension',     message: "Ah, the classic 'I like you but also you're annoying' zone." },
   { level: 4, emoji: '😤', label: 'Pretty riled up',  message: "Okay, someone owes someone an apology after this round." },
   { level: 5, emoji: '🤬', label: 'Maximum hate',     message: "Wow. The cards better come with a peace treaty." },
 ];
@@ -25,7 +25,7 @@ export const HATE_LEVELS = [
 export const FACTS = [
   "Do you know your smile is more contagious than COVID — and might actually have a higher fatality rate?",
   "I heard Cadbury Dairy Milk makes you happy. I'd like to apply for the same job.",
-  "I searched 'queen of England' and it just showed me your picture.",
+  "I googled 'queen of England' and it just showed me your picture.",
 ];
 
 export const FACT_INTERVAL_MS = 5000;
