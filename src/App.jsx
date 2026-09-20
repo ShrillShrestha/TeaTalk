@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { THEMES } from './data/themes';
-import { DECKS } from './data/decks';
+import { DECK } from './data/decks';
 import { useRoom } from './hooks/useRoom';
 import Header from './components/Header';
 import TweaksPanel from './components/TweaksPanel';
+import Curtain from './components/Curtain';
 import HostScreen from './screens/HostScreen';
 import InviteScreen from './screens/InviteScreen';
 import JoinScreen from './screens/JoinScreen';
@@ -11,7 +12,6 @@ import VibeCheckScreen from './screens/VibeCheckScreen';
 import SurveyScreen from './screens/SurveyScreen';
 import BrewingScreen from './screens/BrewingScreen';
 import ClickStartScreen from './screens/ClickStartScreen';
-import DeckScreen from './screens/DeckScreen';
 import PlayScreen from './screens/PlayScreen';
 import DoneScreen from './screens/DoneScreen';
 import styles from './App.module.css';
@@ -28,8 +28,6 @@ export default function App() {
   const cardRadius = corners === 'Crisp' ? '6px' : '24px';
 
   const { screen, actions } = room;
-  const curDeck    = DECKS.find(d => d.id === room.deckId) ?? null;
-  const deckColors = curDeck ? theme.decks[curDeck.id] : null;
 
   return (
     <div
@@ -100,25 +98,24 @@ export default function App() {
 
       {screen === 'brewing' && <BrewingScreen factIndex={room.factIndex} />}
 
-      {screen === 'clickstart' && <ClickStartScreen onStart={actions.continueToDeck} />}
+      {screen === 'clickstart' && <ClickStartScreen onStart={actions.continueToPlay} />}
 
-      {screen === 'deck' && (
-        <DeckScreen theme={theme} hostName={room.hostName} guestName={room.guestName} onSelect={actions.startDeck} />
-      )}
-
-      {screen === 'play' && curDeck && deckColors && (
+      {screen === 'play' && (
         <PlayScreen
           texture={texture}
-          deck={curDeck} deckColors={deckColors}
+          deck={DECK} deckDot={theme.deckDot}
           pos={room.pos} flipped={room.flipped} picker={room.picker}
           order={room.order} hostName={room.hostName} guestName={room.guestName}
-          flying={room.flying} onFlip={actions.flip} onAdvance={actions.advance}
+          flying={room.flying} flyDir={room.flyDir} canGoBack={room.canGoBack}
+          onFlip={actions.flip} onAdvance={actions.advance} onBack={actions.goBack}
         />
       )}
 
       {screen === 'done' && (
-        <DoneScreen hostName={room.hostName} guestName={room.guestName} answeredTotal={room.answeredTotal} onReplay={actions.replay} onBackToDeck={actions.backToDeck} />
+        <DoneScreen />
       )}
+
+      <Curtain state={room.curtain} />
     </div>
   );
 }

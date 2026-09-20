@@ -1,3 +1,5 @@
+@import '../animations.css';
+
 .screen {
   width: 100%;
   max-width: 460px;
@@ -10,6 +12,7 @@
 /* ── Turn indicator ─────────────────────────────────────────────── */
 
 .turnBar {
+  animation: rise .45s ease both;
   width: 100%;
   display: flex;
   align-items: center;
@@ -49,6 +52,7 @@
 /* ── Card stack ─────────────────────────────────────────────────── */
 
 .cardStack {
+  animation: dealIn .6s cubic-bezier(.2, .8, .3, 1) .09s both;
   position: relative;
   width: 100%;
   aspect-ratio: 3/4;
@@ -88,6 +92,24 @@
   animation: flyoff .36s cubic-bezier(.4,0,.7,.3) forwards;
 }
 
+/* Stepping back sends the card off the other edge, so the deck reads as
+   moving in reverse rather than repeating the same exit. Reuses the flyoff
+   keyframe by overriding the custom properties it reads. */
+.cardFlyingBack {
+  position: absolute;
+  inset: 0;
+  --fx: 130%;
+  --fr: 16deg;
+  animation: flyoff .36s cubic-bezier(.4,0,.7,.3) forwards;
+}
+
+/* …and the card you came back to slides in from the side it left on. */
+.cardBack {
+  position: absolute;
+  inset: 0;
+  animation: returnIn .4s cubic-bezier(.2,.8,.3,1) both;
+}
+
 /* ── Action buttons ─────────────────────────────────────────────── */
 
 .actions {
@@ -96,25 +118,16 @@
   gap: 12px;
 }
 
-.skipBtn {
-  flex-shrink: 0;
+.navBtn {
+  flex: 1;
   font-size: 15px;
   padding: 15px 20px;
   border-radius: 16px;
 }
 
-.advanceBtn {
-  flex: 1;
-  border: none;
-  background: var(--accent);
-  color: #fff;
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 16px;
-  padding: 15px;
-  border-radius: 16px;
-  cursor: pointer;
-  box-shadow: 0 10px 24px -12px var(--accent-shadow);
+.navBtn:disabled {
+  opacity: .4;
+  cursor: default;
 }
 
 .flipBtn {
@@ -192,6 +205,17 @@
   flex-direction: column;
   padding: 30px 28px;
   box-shadow: 0 22px 50px -26px rgba(80,55,30,.5);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.faceUp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 26px 56px -26px rgba(80,55,30,.55);
+}
+
+.faceUp:active {
+  transform: translateY(0) scale(.995);
 }
 
 .faceUpHeader {
@@ -236,4 +260,23 @@
   font-size: 13px;
   color: #a8967c;
   line-height: 1.5;
+}
+
+/* The stack arrives a touch after the turn bar, so the cards read as dealt
+   onto the table rather than appearing with it. */
+@keyframes dealIn {
+  from { transform: translateY(30px) scale(.93); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);   opacity: 1; }
+}
+
+@keyframes returnIn {
+  from { transform: translateX(-44%) rotate(-7deg); opacity: 0; }
+  to   { transform: translateX(0)    rotate(0deg);  opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardStack, .turnBar, .card, .cardBack { animation: none; }
+  .cardFlying, .cardFlyingBack { animation: fadeOutCard .2s ease forwards; }
+
+  @keyframes fadeOutCard { to { opacity: 0; } }
 }

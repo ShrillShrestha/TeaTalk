@@ -7,7 +7,7 @@ export default function InviteScreen({ hostName, link, copied, onCopy, guestName
       <div className={styles.eyebrow}>The kettle's on</div>
       <h1 className={styles.heading}>Your table is set, {hostName}.</h1>
       <p className={styles.body}>
-        Send this link to your guest. Once they join, you'll both move to deck selection automatically.
+        Send this link to your guest. Once they're settled, the first card turns over for both of you automatically.
       </p>
 
       <div className={styles.linkRow}>

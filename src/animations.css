@@ -1,0 +1,25 @@
+/* Shared keyframes. Imported into each CSS module that uses them: CSS Modules
+   rewrites animation names per file, so a keyframe defined only in global CSS
+   is invisible to a module and the animation silently never runs. Importing
+   here means each module gets a definition whose scoped name matches its own
+   references. */
+@keyframes flyoff {
+  to { transform: translate(var(--fx, -130%), var(--fy, -8%)) rotate(var(--fr, -16deg)); opacity: 0; }
+}
+@keyframes rise {
+  from { transform: translateY(14px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: .4; transform: scale(.85); }
+  50%      { opacity: 1;  transform: scale(1);   }
+}
+@keyframes spin {
+  0%, 88%, 100% { transform: rotate(0deg);  }
+  94%           { transform: rotate(-8deg); }
+}
+@keyframes steam {
+  0%   { opacity: 0;  transform: translateY(2px)  scaleY(.7);  }
+  40%  { opacity: .7; }
+  100% { opacity: 0;  transform: translateY(-9px) scaleY(1.1); }
+}

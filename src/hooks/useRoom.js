@@ -1,13 +1,21 @@
 import { useState, useEffect } from 'react';
 import { ref, set, update, onValue, off } from 'firebase/database';
 import { db } from '../firebase';
-import { DECKS, shuffle } from '../data/decks';
+import { deckOrder } from '../data/decks';
 import { FACTS, FACT_INTERVAL_MS } from '../data/survey';
 
-// Screens the guest walks through locally between naming themselves and deck
-// selection. The room status stays 'waiting' throughout, so the host never
+// Screens the guest walks through locally between naming themselves and the
+// first card. The room status stays 'waiting' throughout, so the host never
 // follows along — these are receiver-only by construction.
 const GUEST_ONLY_SCREENS = ['vibecheck', 'survey', 'brewing', 'clickstart'];
+
+// Curtain timings, in ms. `dwell` is the beat the wash holds at full cover
+// after the swap — long enough to register as a pause, short enough not to drag.
+const CURTAIN_CLOSE = 420;
+const CURTAIN_OPEN  = 520;
+const CURTAIN_DWELL = 160;
+
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 function parseHash() {
   const hash = (window.location.hash || '').replace(/^#/, '');
@@ -26,7 +34,11 @@ function deriveScreen(localScreen, role, roomData) {
   // Guest-only vibe check. Gated on role so a host link can never reach it.
   if (role === 'guest' && GUEST_ONLY_SCREENS.includes(localScreen)) return localScreen;
   if (roomData.status === 'waiting') return role === 'host' ? 'invite' : 'loading';
-  return roomData.status; // 'deck' | 'play' | 'done'
+  // Anything else (including a 'deck' status left by an older room) has no
+  // screen — show the recovery prompt rather than a blank page.
+  return roomData.status === 'play' || roomData.status === 'done'
+    ? roomData.status
+    : 'not-found';
 }
 
 export function useRoom() {
@@ -40,6 +52,7 @@ export function useRoom() {
   const [link,       setLink]       = useState('');
   const [copied,     setCopied]     = useState(false);
   const [flying,     setFlying]     = useState(false);
+  const [flyDir,     setFlyDir]     = useState('forward'); // which way the deck last moved
 
   // Vibe-check state — local to the guest's device
   const [surveyStep,     setSurveyStep]     = useState(0);
@@ -48,6 +61,18 @@ export function useRoom() {
   const [hateLevel,      setHateLevel]      = useState(3);
   const [hateTouched,    setHateTouched]    = useState(false);
   const [factIndex,      setFactIndex]      = useState(0);
+  const [curtain,        setCurtain]        = useState('idle'); // idle | closing | opening
+
+  // Cover the screen, run the change behind the wash, then uncover.
+  const withCurtain = async (change, dwell = CURTAIN_DWELL) => {
+    setCurtain('closing');
+    await wait(CURTAIN_CLOSE);
+    await change();
+    await wait(dwell);
+    setCurtain('opening');
+    await wait(CURTAIN_OPEN);
+    setCurtain('idle');
+  };
 
   // Parse URL hash on mount to resume a host or guest session
   useEffect(() => {
@@ -70,14 +95,16 @@ export function useRoom() {
 
   const screen = deriveScreen(localScreen, role, roomData);
 
-  // Rotate the fun facts, then hand off to the click-to-start splash. Each fact
-  // gets FACT_INTERVAL_MS; the last one holds a beat longer before the switch.
+  // Rotate the fun facts, then hand off to the click-to-start splash. Every
+  // fact gets the same dwell; the curtain supplies the beat before the swap.
   useEffect(() => {
     if (screen !== 'brewing') return;
     const isLast = factIndex >= FACTS.length - 1;
     const timer = setTimeout(
-      () => (isLast ? setLocalScreen('clickstart') : setFactIndex(i => i + 1)),
-      isLast ? FACT_INTERVAL_MS + 900 : FACT_INTERVAL_MS,
+      () => (isLast
+        ? withCurtain(() => setLocalScreen('clickstart'))
+        : setFactIndex(i => i + 1)),
+      FACT_INTERVAL_MS,
     );
     return () => clearTimeout(timer);
   }, [screen, factIndex]);
@@ -85,6 +112,7 @@ export function useRoom() {
   // Normalize order — Firebase may return a dense array as a keyed object
   const rawOrder = roomData?.order ?? [];
   const order = Array.isArray(rawOrder) ? rawOrder : Object.values(rawOrder);
+
 
   // ── actions ──────────────────────────────────────────────────────────────
 
@@ -95,9 +123,8 @@ export function useRoom() {
       hostName: hostInput.trim(),
       guestName: null,
       status: 'waiting',
-      deckId: null,
       survey: null,
-      pos: 0, flipped: false, picker: 0, answeredTotal: 0, order: [],
+      pos: 0, flipped: false, picker: 0, order: [],
     });
     const base = window.location.href.split('#')[0];
     setLink(base + '#room=' + rid);
@@ -118,7 +145,7 @@ export function useRoom() {
 
   // The guest names themselves, then peels off into the vibe check alone. The
   // room status deliberately stays 'waiting' so the host keeps seeing the
-  // invite screen — only continueToDeck moves both players on.
+  // invite screen — only continueToPlay moves both players on.
   const joinRoom = async () => {
     if (!guestInput.trim() || !roomId) return;
     await update(ref(db, `rooms/${roomId}`), { guestName: guestInput.trim() });
@@ -158,22 +185,24 @@ export function useRoom() {
     saveSurvey({ hate: level });
   };
 
-  const continueToBrewing = () => { setFactIndex(0); setLocalScreen('brewing'); };
+  const continueToBrewing = () => withCurtain(() => {
+    setFactIndex(0);
+    setLocalScreen('brewing');
+  });
 
-  const continueToDeck = async () => {
-    await update(ref(db, `rooms/${roomId}`), { status: 'deck' });
-    setLocalScreen(null);
-  };
-
-  const startDeck = async (id) => {
-    const deck = DECKS.find(d => d.id === id);
+  // There is one deck, always played in its authored order.
+  const startGame = async () => {
     await update(ref(db, `rooms/${roomId}`), {
-      deckId: id,
-      order: shuffle(deck.questions.length),
+      order: deckOrder(),
       status: 'play',
-      pos: 0, flipped: false, picker: 0, answeredTotal: 0,
+      pos: 0, flipped: false, picker: 0,
     });
   };
+
+  const continueToPlay = () => withCurtain(async () => {
+    await startGame();
+    setLocalScreen(null);
+  }, 320);
 
   const flip = async () => {
     if (!roomData?.flipped) {
@@ -181,19 +210,36 @@ export function useRoom() {
     }
   };
 
-  const advance = (counts) => {
+  // Turning a card over is a one-time ceremony on the first card; every card
+  // after it arrives face up, so a tap just moves the deck along.
+  const advance = () => {
     if (flying || !roomData) return;
-    const next        = roomData.pos + 1;
-    const newAnswered = counts ? roomData.answeredTotal + 1 : roomData.answeredTotal;
+    const next = roomData.pos + 1;
+    setFlyDir('forward');
     setFlying(true);
     setTimeout(async () => {
       if (next >= order.length) {
-        await update(ref(db, `rooms/${roomId}`), { status: 'done', answeredTotal: newAnswered });
+        await update(ref(db, `rooms/${roomId}`), { status: 'done' });
       } else {
         await update(ref(db, `rooms/${roomId}`), {
-          pos: next, flipped: false, picker: roomData.picker ? 0 : 1, answeredTotal: newAnswered,
+          pos: next, flipped: true, picker: roomData.picker ? 0 : 1,
         });
       }
+      setFlying(false);
+    }, 360);
+  };
+
+  // Step back one card, handing the pick back to whoever had it.
+  const goBack = () => {
+    if (flying || !roomData || roomData.pos === 0) return;
+    setFlyDir('back');
+    setFlying(true);
+    setTimeout(async () => {
+      await update(ref(db, `rooms/${roomId}`), {
+        pos: roomData.pos - 1,
+        flipped: true,
+        picker: roomData.picker ? 0 : 1,
+      });
       setFlying(false);
     }, 360);
   };
@@ -209,40 +255,41 @@ export function useRoom() {
     setLink('');
     setCopied(false);
     setFlying(false);
+    setFlyDir('forward');
     setSurveyStep(0);
     setSelectedVibe(null);
     setSelectedExcite(null);
     setHateLevel(3);
     setHateTouched(false);
     setFactIndex(0);
+    setCurtain('idle');
   };
 
-  const backToDeck = async () => {
-    await update(ref(db, `rooms/${roomId}`), { status: 'deck' });
+  // Ends the round early for both devices.
+  const endSession = async () => {
+    await update(ref(db, `rooms/${roomId}`), { status: 'done' });
   };
-
-  const replay = () => startDeck(roomData?.deckId);
 
   return {
     screen, role,
     hostInput,  setHostInput,
     guestInput, setGuestInput,
-    link, copied, flying, order,
+    link, copied, flying, flyDir, order,
     surveyStep, selectedVibe, selectedExcite, hateLevel, hateTouched, factIndex,
     survey: roomData?.survey ?? null,
+    curtain,
     guestJoined: !!roomData?.guestName,
     hostName:      roomData?.hostName      || 'Player 1',
     guestName:     roomData?.guestName     || 'Player 2',
     pos:           roomData?.pos           ?? 0,
     flipped:       roomData?.flipped       ?? false,
     picker:        roomData?.picker        ?? 0,
-    answeredTotal: roomData?.answeredTotal ?? 0,
-    deckId:        roomData?.deckId        ?? null,
+    canGoBack: (roomData?.pos ?? 0) > 0,
     actions: {
-      createRoom, copyLink, joinRoom, startDeck, flip, advance, goHome, backToDeck, replay,
+      createRoom, copyLink, joinRoom, flip, advance, goBack, goHome, endSession,
       continueToSurvey, continueToSurveyQ2, continueToSurveyQ3,
       pickVibe, unpickVibe, pickExcite, unpickExcite,
-      changeHateLevel, continueToBrewing, continueToDeck,
+      changeHateLevel, continueToBrewing, continueToPlay,
     },
   };
 }

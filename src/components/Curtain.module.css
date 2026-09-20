@@ -1,0 +1,71 @@
+.curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--page-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Swallow taps for the length of the transition so an eager second tap
+     can't fire the action underneath twice. */
+  pointer-events: auto;
+}
+
+/* The wash sweeps out from the middle, holds full-bleed while the screen
+   behind it is swapped, then retreats the same way. */
+.closing {
+  animation: curtainIn 420ms cubic-bezier(.4, 0, .6, 1) forwards;
+}
+
+.opening {
+  animation: curtainOut 520ms cubic-bezier(.3, 0, .3, 1) forwards;
+}
+
+@keyframes curtainIn {
+  from { clip-path: circle(0% at 50% 50%);   }
+  to   { clip-path: circle(150% at 50% 50%); }
+}
+
+@keyframes curtainOut {
+  from { clip-path: circle(150% at 50% 50%); }
+  to   { clip-path: circle(0% at 50% 50%);   }
+}
+
+/* Three dots riding a wave, the way a typing indicator does — it reads as
+   "something is coming" rather than "something is loading". */
+.typing {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.dot,
+.dotB,
+.dotC {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: typingWave 1.15s ease-in-out infinite;
+}
+
+.dotB { animation-delay: .16s; }
+.dotC { animation-delay: .32s; }
+
+@keyframes typingWave {
+  0%, 55%, 100% { transform: translateY(0);    opacity: .32; }
+  27%           { transform: translateY(-9px); opacity: 1;   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .closing { animation: curtainFadeIn  200ms ease both; }
+  .opening { animation: curtainFadeOut 200ms ease both; }
+
+  .dot, .dotB, .dotC {
+    animation: none;
+    opacity: .5;
+  }
+
+  @keyframes curtainFadeIn  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes curtainFadeOut { from { opacity: 1; } to { opacity: 0; } }
+}

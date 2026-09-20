@@ -1,4 +1,7 @@
+@import '../animations.css';
+
 .screen {
+  animation: rise .5s ease both;
   width: 100%;
   max-width: 460px;
   flex: 1;

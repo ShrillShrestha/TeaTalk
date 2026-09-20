@@ -1,12 +1,16 @@
 import styles from './PlayScreen.module.css';
 
-export default function PlayScreen({ texture, deck, deckColors, pos, flipped, picker, order, hostName, guestName, flying, onFlip, onAdvance }) {
+export default function PlayScreen({ texture, deck, deckDot, pos, flipped, picker, order, hostName, guestName, flying, flyDir, canGoBack, onFlip, onAdvance, onBack }) {
   const pickerName = picker ? guestName : hostName;
   const otherName  = picker ? hostName  : guestName;
   const cardKey    = `${pos}-${flipped}`;
+  const goingBack  = flyDir === 'back';
+  const cardClass  = flying
+    ? (goingBack ? styles.cardFlyingBack : styles.cardFlying)
+    : (goingBack ? styles.cardBack       : styles.card);
 
   return (
-    <div className={styles.screen} style={{ '--deck-dot': deckColors.dot }}>
+    <div className={styles.screen} style={{ '--deck-dot': deckDot }}>
 
       <div className={styles.turnBar}>
         <div className={styles.turnLeft}>
@@ -22,18 +26,23 @@ export default function PlayScreen({ texture, deck, deckColors, pos, flipped, pi
       <div className={styles.cardStack}>
         <div className={styles.stackLayerA} />
         <div className={styles.stackLayerB} />
-        <div key={cardKey} className={flying ? styles.cardFlying : styles.card}>
+        <div key={cardKey} className={cardClass}>
           {!flipped && <CardFaceDown deck={deck} texture={texture} pickerName={pickerName} pos={pos} onFlip={onFlip} />}
-          {flipped  && <CardFaceUp   deck={deck} pos={pos} order={order} otherName={otherName} />}
+          {flipped  && <CardFaceUp   deck={deck} pos={pos} order={order} otherName={otherName} onNext={onAdvance} />}
         </div>
       </div>
 
       <div className={styles.actions}>
+        <button
+          className={`ghost-btn ${styles.navBtn}`}
+          onClick={onBack}
+          disabled={!canGoBack}
+        >
+          ← Previous
+        </button>
+
         {flipped ? (
-          <>
-            <button className={`ghost-btn ${styles.skipBtn}`} onClick={() => onAdvance(false)}>Skip</button>
-            <button className={styles.advanceBtn} onClick={() => onAdvance(true)}>We both answered →</button>
-          </>
+          <button className={`ghost-btn ${styles.navBtn}`} onClick={onAdvance}>Skip</button>
         ) : (
           <button className={`dark-btn ${styles.flipBtn}`} onClick={onFlip}>Turn over the card</button>
         )}
@@ -56,9 +65,9 @@ function CardFaceDown({ deck, texture, pickerName, pos, onFlip }) {
   );
 }
 
-function CardFaceUp({ deck, pos, order, otherName }) {
+function CardFaceUp({ deck, pos, order, otherName, onNext }) {
   return (
-    <div className={styles.faceUp}>
+    <div className={styles.faceUp} onClick={onNext}>
       <div className={styles.faceUpHeader}>
         <span className={styles.faceUpDeckLabel}>{deck.name}</span>
         <span className={styles.faceUpCounter}>{pos + 1} of {order.length}</span>
@@ -69,7 +78,7 @@ function CardFaceUp({ deck, pos, order, otherName }) {
         </p>
       </div>
       <div className={styles.faceUpFooter}>
-        Both of you answer out loud,<br />then {otherName} picks the next card.
+        Both of you answer out loud, then tap the card —<br />{otherName} picks the next one.
       </div>
     </div>
   );

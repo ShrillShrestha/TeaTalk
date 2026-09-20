@@ -2,26 +2,8 @@
 html, body, #root { height: 100%; }
 body { font-family: 'Hanken Grotesk', system-ui, sans-serif; }
 
-@keyframes flyoff {
-  to { transform: translate(var(--fx, -130%), var(--fy, -8%)) rotate(var(--fr, -16deg)); opacity: 0; }
-}
-@keyframes rise {
-  from { transform: translateY(14px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-@keyframes pulse {
-  0%, 100% { opacity: .4; transform: scale(.85); }
-  50%       { opacity: 1;  transform: scale(1);   }
-}
-@keyframes spin {
-  0%, 88%, 100% { transform: rotate(0deg);  }
-  94%           { transform: rotate(-8deg); }
-}
-@keyframes steam {
-  0%   { opacity: 0;   transform: translateY(2px)  scaleY(.7);  }
-  40%  { opacity: .7; }
-  100% { opacity: 0;   transform: translateY(-9px) scaleY(1.1); }
-}
+/* Shared keyframes live in animations.css and are imported by each CSS module
+   that uses them — see the note there for why they can't live here. */
 
 ::selection { background: #d98b6a; color: #fff; }
 input { -webkit-appearance: none; appearance: none; }
@@ -52,7 +34,7 @@ input { -webkit-appearance: none; appearance: none; }
   font-weight: 600;
   cursor: pointer;
 }
-.ghost-btn:hover { background: rgba(255,255,255,.5) !important; }
+.ghost-btn:hover:not(:disabled) { background: rgba(255,255,255,.5) !important; }
 
 .copy-btn {
   border: none;

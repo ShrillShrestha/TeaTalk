@@ -3,8 +3,7 @@ import styles from './Header.module.css';
 
 const SCREEN_ACTIONS = {
   invite: { label: 'Start over',  actionKey: 'goHome'     },
-  play:   { label: 'End session', actionKey: 'backToDeck' },
-  done:   { label: 'End session', actionKey: 'backToDeck' },
+  play:   { label: 'End session', actionKey: 'endSession' },
 };
 
 export default function Header({ screen, showTweaks, onToggleTweaks, actions }) {
