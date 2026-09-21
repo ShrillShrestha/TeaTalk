@@ -11,11 +11,9 @@ export const DECK = {
     "What do you miss the most about Nepal?",
     "Three things about yourself that you love",
     "What part of yourself do you think most people don't see?",
-    "Are you proud of yourself?",
     "What is something you are passionate about but don't often get to talk about?",
     "Is it better to be kind or truthful?",
-    "What does a healthy relationship look like to you?",
-    "Do you think we would have been able to connect better if we were in the same place?",
+    "Are you proud of yourself?",
     "What was your first impression of me? Did it change?"
   ],
 };
