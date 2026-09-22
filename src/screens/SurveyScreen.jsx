@@ -36,7 +36,7 @@ export default function SurveyScreen({
     return (
       <QuestionStep
         stepLabel="Vibe check · question 2 of 3"
-        heading="How excited are you to play this game?"
+        heading="How excited are you for our TeaTalk?"
       >
         <EmojiPicker
           options={EXCITEMENT}

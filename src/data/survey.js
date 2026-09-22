@@ -25,7 +25,7 @@ export const HATE_LEVELS = [
 export const FACTS = [
   "Do you know your smile is more contagious than COVID - and might actually have a higher fatality rate? ☠️",
   "I heard Cadbury Dairy Milk makes you happy. I'd like to apply for the same job. 🫣",
-  "I googled 'queen of England' and it just showed me your picture. 👸",
+  "I googled 'queen of England' and it just showed me your picture. 👀",
 ];
 
 export const FACT_INTERVAL_MS = 5000;

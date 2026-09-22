@@ -1,4 +1,4 @@
-import clickImg from '../../imgs/click.gif';
+import clickImg from '../../imgs/click1.gif';
 import styles from './ClickStartScreen.module.css';
 
 export default function ClickStartScreen({ onStart }) {
